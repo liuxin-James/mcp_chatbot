@@ -9,6 +9,12 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import streamlit as st
 
+if sys.platform == "win32":
+    # The default event loop policy for Windows is SelectorEventLoop
+    # which may cause the mcp loading error.
+    # Change to WindowsSelectorEventLoopPolicy to fix.
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 # Add project root to Python path
 PROJECT_ROOT = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -555,7 +561,12 @@ async def process_chat(user_input: str):
             )
             await st.session_state.chat_session.initialize()
             # Keep the history messages from the new chat session.
-            st.session_state.history_messages = st.session_state.chat_session.messages
+            if not st.session_state.history_messages:
+                # If the history messages are not set, we need to get the
+                # system prompt from the chat session.
+                st.session_state.history_messages = (
+                    st.session_state.chat_session.messages
+                )
             st.session_state.session_config_hash = current_config_hash
             # st.toast("New chat session initialized.", icon="🎈")  # User feedback
         else:
