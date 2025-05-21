@@ -1,13 +1,15 @@
 {
-    "mcpServers": {
-        "markdown_processor": {
-            "command": "/path/to/your/uv/path",
-            "args": [
-                "--directory",
-                "/path/to/your/mcp_chatbot/mcp_servers",
-                "run",
-                "markdown_processor.py"
-            ]
-        }
+  "mcpServers": {
+    "markdown_processor": {
+      "isActive": true,
+      "command": "C:\\Users\\l00841179\\.local\\bin\\uv.exe",
+      "args": [
+        "--directory",
+        "D:\\codes\\llm-dev\\mcp_chatbot\\mcp_servers",
+        "run",
+        "markdown_processor.py"
+      ],
+      "name": "markdown_processor"
     }
+  }
 }

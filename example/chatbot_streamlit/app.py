@@ -21,6 +21,8 @@ from mcp_chatbot.chat import ChatSession  # noqa: E402
 from mcp_chatbot.llm import create_llm_client  # noqa: E402
 from mcp_chatbot.mcp.mcp_tool import MCPTool  # noqa: E402
 
+import logging
+
 # --- Streamlit Logo Configuration ---
 st.logo(
     os.path.join(PROJECT_ROOT, "assets", "mcp_chatbot_logo.png"),
@@ -119,11 +121,14 @@ async def get_mcp_tools(force_refresh=False) -> Dict[str, List[MCPTool]]:
         for name, srv_config in server_config["mcpServers"].items():
             try:
                 client = MCPClient(name, srv_config)
+                logging.info(client)
                 await stack.enter_async_context(client)
                 tools = await client.list_tools()
+                logging.info(f"Tools: {tools}")
                 tools_dict[name] = tools
             except Exception as e:
                 st.sidebar.error(f"Error fetching tools from {name}: {e}")
+                logging.error(f"Tool error: {e}")
 
     st.session_state.mcp_tools_cache = tools_dict
     return tools_dict
@@ -875,6 +880,7 @@ async def main():
 
 if __name__ == "__main__":
     try:
+        os.environ['NO_PROXY'] = 'api.openai.rnd.huawei.com'
         asyncio.run(main())
     except KeyboardInterrupt:
         print("Shutting down...")

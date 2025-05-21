@@ -35,6 +35,7 @@ class OllamaClient:
                 "messages": messages,
                 "stream": False,
             },
+            verify=False
         )
         response.raise_for_status()
         return response.json()["message"]["content"]
@@ -57,6 +58,7 @@ class OllamaClient:
                 "stream": True,
             },
             stream=True,
+            verify=False
         )
         response.raise_for_status()
 

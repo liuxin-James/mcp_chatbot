@@ -40,13 +40,16 @@ class MCPClient:
             else None,
         )
         try:
+            logging.info("start")
             stdio_transport = await self.exit_stack.enter_async_context(
                 stdio_client(server_params)
             )
+            logging.info("stdio_transport")
             read, write = stdio_transport
             session = await self.exit_stack.enter_async_context(
                 ClientSession(read, write)
             )
+            logging.info("session")
             await session.initialize()
             self.session = session
         except Exception as e:
